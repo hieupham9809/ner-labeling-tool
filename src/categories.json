@@ -1,0 +1,74 @@
+{
+  "name_activity": {
+    "color": "#f9c069",
+    "shortcut": "T"
+  },
+  "type_activity": {
+    "color": "#d5daac",
+    "shortcut": "L"
+  },
+  "holder": {
+    "color": "#9d8fc2",
+    "shortcut": "B"
+  },
+  "clock_time": {
+    "color": "#a6949f",
+    "shortcut": "G"
+  },
+  "date_time": {
+    "color": "#51A3A3",
+    "shortcut": "N"
+  },
+  "province": {
+    "color": "#48D683",
+    "shortcut": "I"
+  },
+  "town": {
+    "color": "#F6FA67",
+    "shortcut": "H"
+  },
+  "name_place": {
+    "color": "#a6b1a1",
+    "shortcut": "R"
+  },
+  "building": {
+    "color": "#f973c5",
+    "shortcut": "U"
+  },
+  "room": {
+    "color": "#e97b27",
+    "shortcut": "P"
+  },
+  "DRL": {
+    "color": "#6e2241",
+    "shortcut": "D"
+  },
+  "CTXH": {
+    "color": "#5ae2f7",
+    "shortcut": "C"
+  },
+  "holder_name": {
+    "color": "#5c78eb",
+    "shortcut": "E"
+  },
+  "phone": {
+    "color": "#45a0ac",
+    "shortcut": "S"
+  },
+  "email": {
+    "color": "#F00705",
+    "shortcut": "M"
+  },
+  "assign": {
+    "color": "#e37163",
+    "shortcut": "K"
+  },
+  "works": {
+    "color": "#2a920b",
+    "shortcut": "V"
+  },
+  "joiner": {
+    "color": "#C3E991",
+    "shortcut": "J"
+  }
+}
