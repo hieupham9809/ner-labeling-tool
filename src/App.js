@@ -12,36 +12,36 @@ class App extends Component {
       color: '#FFFFFF',
       shortcut: ' ',
     };
-    // this.state = {
-    //   idx: -1,
-    // };
-    var data = require('./test.json');
     this.state = {
-
-      data,
-      name: "test",
-      idx: 0,
-      runs: data.map(x => x.tags),
+      idx: -1,
     };
+    // var data = require('./test.json');
+    // this.state = {
+
+    //   data,
+    //   name: "test",
+    //   idx: 0,
+    //   runs: data.map(x => x.tags),
+    // };
   }
 
-  // handleFileSelect = (e) => {
-  //   const file = e.target.files[0];
-  //   const reader = new FileReader();
-  //   const newLocal = this;
-  //   reader.onload = (ev) => {
-  //     const data = JSON.parse(ev.target.result);
-  //     newLocal.setState({
-  //       data,
-  //       name: file.name,
-  //       idx: 0,
-  //       runs: data.map(x => x.tags),
-  //     });
-  //   };
-  //   if (file) {
-  //     reader.readAsText(file);
-  //   }
-  // };
+  handleFileSelect = (e) => {
+    const file = e.target.files[0];
+    const reader = new FileReader();
+    const newLocal = this;
+    reader.onload = (ev) => {
+      const data = JSON.parse(ev.target.result);
+      newLocal.setState({
+        data,
+        name: file.name,
+        idx: 0,
+        runs: data.map(x => x.tags),
+      });
+    };
+    if (file) {
+      reader.readAsText(file);
+    }
+  };
 
   
   predict = () => {
@@ -126,7 +126,7 @@ class App extends Component {
        
         {/* <input type="file" id="file" onChange={this.handleFileSelect} /> */}
         <div>
-          {/* <label className="btn btn-default btn-file" htmlFor="file">
+          <label className="btn btn-default btn-file" htmlFor="file">
             Browse
             <input
               id="file"
@@ -134,7 +134,7 @@ class App extends Component {
               style={{ display: 'none' }}
               onChange={this.handleFileSelect}
             />
-          </label> */}
+          </label>
           
           <span>{name && name !== '' ? name : 'Choose file'}</span>
         </div>
