@@ -4,6 +4,7 @@ import TextArea from './TextArea';
 import { download } from './utils';
 import categories from './categories.json';
 import { PREDICT_API } from './constants';
+import LabelMap from './LabelMap';
 import axios from 'axios';
 class App extends Component {
   constructor() {
@@ -36,6 +37,7 @@ class App extends Component {
         name: file.name,
         idx: 0,
         runs: data.map(x => x.tags),
+        recheck:false,
       });
     };
     if (file) {
@@ -112,14 +114,65 @@ class App extends Component {
   }
   saveAll = () => {
     const { data, runs, name } = this.state;
+    
     const list = data.map((x, i) => ({ ...data[i], tags: runs[i] }));
     download(JSON.stringify(list), name, 'application/json');
   };
 
+  loadTable = (numColumn, listToken, listLabel) => {
+    if (!listToken || !listLabel || listToken.length != listLabel.length){
+      alert("listToken length different with listLabel length or one of them is null");
+      return;
+    }
+    // var index = 0;
+    var listTable = [];
+    for (var i = 0 ; i < Math.ceil(listToken.length / numColumn); i++){
+      var splitListToken = []
+      var splitListLabel = []
+      var splitTemp = []
+      for (var j = numColumn * i; j < numColumn * (i + 1) && j < listToken.length; j++){
+        splitListToken.push(listToken[j]);
+        splitTemp.push(listLabel[j]);
+      }
+
+      splitListLabel.push(splitTemp);
+      listTable.push(<LabelMap headings={splitListToken} rows={splitListLabel}/>)
+    }
+    return (
+      listTable
+    )
+  };
+
   render() {
     const {
-      idx, data, runs, name,
+      idx, data, runs, name,recheck,
     } = this.state;
+    const headings = [
+      'Product name',
+      'SKU',
+      'Stock quantity',
+      'Wholesale cost',
+      'Sale price',
+      'Quantity sold',
+      'Gross sales',
+      'Net sales',
+      'Notes',
+      'More'
+    ];
+
+    const rows =
+      [
+        'Red and black plaid scarf with thin red stripes and thick black stripes',
+        124689325,
+        28,
+        '$35.00',
+        '$60.00',
+        12,
+        '$720.00',
+        '$300.00',
+        'bla bla bla',
+        'Nope'
+      ];
     return (
       
       <div className="App container">
@@ -185,6 +238,23 @@ class App extends Component {
             onSaved={this.saveRuns(idx)}
           />
         ) : null}
+        {data && [
+          <button
+            type="button"
+            className="btn btn-default"
+            key="save"
+            onClick={() => {
+              if (recheck){
+                this.setState({recheck:false});
+              } else {
+                this.setState({recheck:true});
+              }
+            }
+            }
+          >
+            For Developer Only
+          </button>
+        ]}
         {/* {(
           <TextArea
             key="text-area"
@@ -195,6 +265,8 @@ class App extends Component {
             onSaved={this.saveRuns(idx)}
           />
         )} */}
+        {recheck && [this.loadTable(10,data[idx].token, data[idx].label)]}
+        {/* <LabelMap headings={headings} rows={rows} */}
       </div>
     );
   }
