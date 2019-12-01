@@ -6,6 +6,8 @@ import categories from './categories.json';
 import { PREDICT_API } from './constants';
 import LabelMap from './LabelMap';
 import axios from 'axios';
+
+const fs = require('fs');
 class App extends Component {
   constructor() {
     super();
@@ -43,24 +45,191 @@ class App extends Component {
     if (file) {
       reader.readAsText(file);
     }
-  };
+  }
+  replaceAll(str, find, replace){
+    return str.replace(new RegExp(find, 'g'), replace);
+  }
 
+  removeA(list,value) {
+      // var what, a = arguments, L = a.length, ax;
+      // while (L > 1 && arr.length) {
+      //     what = a[--L];
+      //     while ((ax= arr.indexOf(what)) !== -1) {
+      //         arr.splice(ax, 1);
+      //     }
+      // }
+      // return arr;
+      var result=[]
+      for (let index=0;index<list.length;index++)
+      {
+        if (list[index]!=value && list[index]!="️️️")
+        {
+          console.log("------------------------length special")
+          console.log("️️️".length)
+          result.push(list[index])
+        }
+      }
+      return result
+  }
+
+  parseTags(listToken,listLabel){
+    let corpusPointer=0;
+    let prev=null
+    let tags={}
+    if (listLabel[0]!='O')
+        {
+            console.log(`begin_pointer ${corpusPointer} of label ${listLabel[0].slice(2,listLabel[0].length)}`)
+            console.log(`previous pointer ${prev} of label ${listLabel[0].slice(2,listLabel[0].length)}`)
+            tags[corpusPointer.toString()]={}
+            tags[corpusPointer.toString()]['prev']=prev
+            tags[corpusPointer.toString()]['type']=listLabel[0].slice(2,listLabel[0].length)
+            prev=corpusPointer
+        }
+    else
+        {
+            console.log(`begin_pointer ${corpusPointer} of label normal`)
+            console.log(`previous pointer ${prev} of label normal`)
+            tags[corpusPointer.toString()]={}
+            tags[corpusPointer.toString()]['prev']=prev
+            tags[corpusPointer.toString()]['type']='normal'
+            prev=corpusPointer
+        }
+
+    
+    for (let index=0;index<listToken.length-1;index++)
+    {
+
+        if (index==0)
+            corpusPointer+=listToken[index].length //begin of corpus 
+        else
+            corpusPointer+=listToken[index].length+1 //middle/end of corpus
+        if (listLabel[index].includes('B') && listLabel[index+1].includes('B')&&listLabel[index]!=listLabel[index+1]||listLabel[index].includes('I') && listLabel[index+1].includes('B'))
+            {
+                
+                console.log(`end_pointer ${corpusPointer} of label ${listLabel[index].slice(2,listLabel[index].length)}`)
+                tags[prev.toString()]['end']=corpusPointer
+                tags[prev.toString()]['type']=listLabel[index].slice(2,listLabel[index].length)
+
+                console.log(`begin_pointer ${corpusPointer} of label normal`)
+                console.log(`end_pointer ${corpusPointer+1} of label normal`)
+                console.log(`previous_pointer ${prev} of label normal`)
+                tags[corpusPointer.toString()]={}
+                tags[corpusPointer.toString()]['end']=corpusPointer+1
+                tags[corpusPointer.toString()]['type']='normal'
+                tags[corpusPointer.toString()]['end']=corpusPointer+1
+                tags[corpusPointer.toString()]['prev']=prev
+
+
+                console.log(`begin_pointer ${corpusPointer+1} of label ${listLabel[index+1].slice(2,listLabel[index+1].length)}`)
+                console.log(`previous_pointer ${corpusPointer} of label ${listLabel[index+1].slice(2,listLabel[index+1].length)}`)
+                tags[(corpusPointer+1).toString()]={}
+                tags[(corpusPointer+1).toString()]['type']=listLabel[index+1].slice(2,listLabel[index+1].length)
+                tags[(corpusPointer+1).toString()]['prev']=corpusPointer
+
+                prev=corpusPointer+1
+            }
+        if (listLabel[index].includes('O') && listLabel[index+1].includes('B'))
+            {
+                console.log(`end_pointer ${corpusPointer+1} of label normal`)
+                tags[prev.toString()]['end']=corpusPointer+1
+
+
+                console.log(`begin_pointer ${corpusPointer+1} of label ${listLabel[index+1].slice(2,listLabel[index+1].length)}`)
+                console.log(`previous_pointer ${prev} of label ${listLabel[index+1].slice(2,listLabel[index+1].length)}`)
+                tags[(corpusPointer+1).toString()]={}
+                tags[(corpusPointer+1).toString()]['type']=listLabel[index+1].slice(2,listLabel[index+1].length)
+                tags[(corpusPointer+1).toString()]['prev']=prev
+                prev=corpusPointer+1
+            }
+        if (listLabel[index].includes('I') && listLabel[index+1].includes('O')||listLabel[index].includes('B') && listLabel[index+1].includes('O'))
+            {
+                console.log(`end_pointer ${corpusPointer} of label ${listLabel[index].slice(2,listLabel[index].length)}`) 
+                tags[prev.toString()]['end']=corpusPointer
+                tags[prev.toString()]['type']=listLabel[index].slice(2,listLabel[index].length)
+
+
+                console.log(`begin_pointer ${corpusPointer} of label normal`)
+                console.log(`previous_pointer ${prev} of label normal`)
+                tags[corpusPointer.toString()]={}
+                tags[corpusPointer.toString()]['prev']=prev
+                tags[corpusPointer.toString()]['type']='normal'
+                prev=corpusPointer
+            }
+    }
+    // console.log(listToken[listToken.length-1])
+    corpusPointer+=listToken[listToken.length-1].length
+    if (listLabel[listToken.length-1].includes('O'))
+        {
+            console.log(`end_pointer ${corpusPointer+1} of label normal`)
+            tags[prev.toString()]['end']=corpusPointer+1
+            tags[prev.toString()]['type']='normal'
+            // console.log(`previous_pointer ${prev} of label normal`)
+        }
+    else
+        {
+            console.log(`end_pointer ${corpusPointer+1} of label ${listLabel[listToken.length-1].slice(2,listLabel[listToken.length-1].length)}`)
+            tags[prev.toString()]['end']=corpusPointer+1
+            tags[prev.toString()]['type']=listLabel[listToken.length-1].slice(2,listLabel[listToken.length-1].length)
+            // console.log(`previous_pointer ${prev} of label ${listLabel[index].slice(2,listLabel[index].length)}`)
+        }
+    return tags    
+  }
   
   predict = () => {
     const {
       idx, data, runs,
     } = this.state;
     const newLocal = this;
-    axios.post(PREDICT_API, [data[idx].message]).then((res) => {
-      const newData = this.combineChunk(res.data[0][0]);
+
+    //LOAD AND CHANGE 
+    var corpusesConvert=require('/home/lap11305/LVTN/ner-labeling-tool/src/test_predicted_convert.json')
+    var resultJsonStringConvert=''
+    let listLabel;
+    let listToken;
+    let newTags;
+    for (let index=0;index<corpusesConvert.length;index++)
+    {
+      
+        if(index==idx){
+          
+          listLabel=corpusesConvert[index].label
+          listToken=corpusesConvert[index].token
+          newTags=this.parseTags(listToken,listLabel)
+          corpusesConvert[index]['tags']=newTags
+          corpusesConvert[index]['message']=listToken.join(' ')
+        }
+    
+    }
+
+
+
+
+
+
+    // axios.post(PREDICT_API, [data[idx].message]).then((res) => {
+    //   const newData = this.combineChunk(res.data[0][0]);
+    //   // console.log(data[idx].content)
+    //   data[idx].message = newData.content;
+    //   runs[idx] = newData.runs;
+    //   newLocal.setState({ data, runs });
+    //   // console.log(data[idx].content);
+    //   // console.log(runs[idx]);
+    // });
+
+
+      
       // console.log(data[idx].content)
-      data[idx].message = newData.content;
-      runs[idx] = newData.runs;
+      // let runs=[];
+      // for (let index=0;index<corpusesConvert.length;index++)
+      // { 
+      //   runs.push(newTags)
+      // }
+      runs[idx]=newTags
+      data[idx].message = corpusesConvert[idx].message;
       newLocal.setState({ data, runs });
       // console.log(data[idx].content);
       // console.log(runs[idx]);
-    });
-  }
+    }
 
   combineChunk = (chunks) => {
     const content = chunks.map(i => i[0]).join(' ');
@@ -113,10 +282,73 @@ class App extends Component {
     };
   }
   saveAll = () => {
+    var resultJsonString=''
     const { data, runs, name } = this.state;
     
     const list = data.map((x, i) => ({ ...data[i], tags: runs[i] }));
-    download(JSON.stringify(list), name, 'application/json');
+    list.forEach(corpus=>{
+        if (corpus.tags){
+        let label=''
+        let contentList=[]
+    
+        // console.log(corpus.tags);
+        Object.keys(corpus.tags).forEach(key=>{
+            // console.log(`${key} : ${corpus.tags[key].end}`);
+            if (corpus.message.substring(parseInt(key),corpus.tags[key].end).split(' ')!=['',''])
+            {
+                let label_type=corpus.tags[key].type
+                let list_splited_1 = this.replaceAll(corpus.message.substring(parseInt(key),corpus.tags[key].end),"\n", " \n ")
+                console.log("---------------------------before")
+                console.log(list_splited_1.split(' '))
+                let list_splited = this.removeA(list_splited_1.split(' '),'')
+                console.log("---------------------------after")
+                console.log(list_splited)
+                // let list_splited=corpus.message.substring(parseInt(key),corpus.tags[key].end).split(' ')
+                // for( let i = 0; i < list_splited.length; i++){ 
+                //     if ( list_splited[i] === '') {
+                //         list_splited.splice(i, 1); 
+                //         i--;
+                //     }
+                // }
+    
+                let label_length=list_splited.length            
+                    // let index=0;
+                    for (let index=0;index<label_length;index++)
+                    {
+                        if (label_type!='normal' && list_splited[index]!='\n'){
+                            if (index==0){
+                                label+='B-'+label_type+' '
+                            }
+                            else{
+                                label+='I-'+label_type+' '
+                            }
+                        }
+                        else{
+                            label+='O '
+                        }
+                    }
+    
+                contentList=contentList.concat(list_splited)
+            }
+            });
+        label=label.substring(0,label.length-1)
+        console.log('-------------------------------message length')
+        console.log(corpus.message.split(' ').length)
+        console.log('-------------------------------label length')
+        console.log(label.split(' ').length)
+        corpus['label']=label.split(' ')
+        corpus['token']=contentList
+        console.log(contentList)
+    
+        resultJsonString+=JSON.stringify(corpus)+','
+        }
+    })
+    resultJsonString='['+resultJsonString.substring(0,resultJsonString.length-1)+']'
+    
+    console.log('This is after the read call');
+  
+  
+    download(resultJsonString, name, 'application/json');
   };
 
   loadTable = (numColumn, listToken, listLabel) => {
