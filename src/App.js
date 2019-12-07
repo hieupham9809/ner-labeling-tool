@@ -362,7 +362,9 @@ class App extends Component {
 
   loadTable = (numColumn, listToken, listLabel) => {
     if (!listToken || !listLabel || listToken.length != listLabel.length){
+      this.setState({recheck:false});
       alert("listToken length different with listLabel length or one of them is null");
+
       return;
     }
     // var index = 0;
