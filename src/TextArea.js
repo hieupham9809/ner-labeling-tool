@@ -96,7 +96,7 @@ export default class TextArea extends Component {
         color: TinyColor(this.props.categories[name].color).getBrightness() < 196 ? 'white' : 'black',
       }}
     >
-      {`${name} (${this.props.categories[name].shortcut})`}
+      {`${this.props.categories[name].display_name} (${this.props.categories[name].shortcut})`}
     </button>
   );
   handleTextSelected = (name) => {

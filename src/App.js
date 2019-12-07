@@ -182,24 +182,24 @@ class App extends Component {
     const newLocal = this;
 
     //LOAD AND CHANGE 
-    var corpusesConvert=require('/home/lap11305/LVTN/ner-labeling-tool/src/test_predicted_convert.json')
-    var resultJsonStringConvert=''
-    let listLabel;
-    let listToken;
-    let newTags;
-    for (let index=0;index<corpusesConvert.length;index++)
-    {
+    // var corpusesConvert=require('/home/lap11305/LVTN/ner-labeling-tool/src/test_predicted_convert.json')
+    // var resultJsonStringConvert=''
+    // let listLabel;
+    // let listToken;
+    // let newTags;
+    // for (let index=0;index<corpusesConvert.length;index++)
+    // {
       
-        if(index==idx){
+    //     if(index==idx){
           
-          listLabel=corpusesConvert[index].label
-          listToken=corpusesConvert[index].token
-          newTags=this.parseTags(listToken,listLabel)
-          corpusesConvert[index]['tags']=newTags
-          corpusesConvert[index]['message']=listToken.join(' ')
-        }
+    //       listLabel=corpusesConvert[index].label
+    //       listToken=corpusesConvert[index].token
+    //       newTags=this.parseTags(listToken,listLabel)
+    //       corpusesConvert[index]['tags']=newTags
+    //       corpusesConvert[index]['message']=listToken.join(' ')
+    //     }
     
-    }
+    // }
 
 
 
@@ -224,9 +224,11 @@ class App extends Component {
       // { 
       //   runs.push(newTags)
       // }
-      runs[idx]=newTags
-      data[idx].message = corpusesConvert[idx].message;
-      newLocal.setState({ data, runs });
+
+      // runs[idx]=newTags
+      // data[idx].message = corpusesConvert[idx].message;
+      // newLocal.setState({ data, runs });
+
       // console.log(data[idx].content);
       // console.log(runs[idx]);
     }

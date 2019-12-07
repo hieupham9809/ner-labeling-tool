@@ -1,74 +1,70 @@
 {
   "name_activity": {
     "color": "#f9c069",
-    "shortcut": "T"
+    "shortcut": "T",
+    "display_name":"Tên hoạt động"
   },
   "type_activity": {
     "color": "#d5daac",
-    "shortcut": "L"
+    "shortcut": "L",
+    "display_name":"Loại hoạt động"
   },
   "holder": {
     "color": "#9d8fc2",
-    "shortcut": "B"
+    "shortcut": "B",
+    "display_name":"Ban tổ chức"
+
   },
-  "clock_time": {
+  "time": {
     "color": "#a6949f",
-    "shortcut": "G"
+    "shortcut": "G",
+    "display_name":"Thời gian"
+
   },
-  "date_time": {
-    "color": "#51A3A3",
-    "shortcut": "N"
-  },
-  "province": {
+  "city": {
     "color": "#48D683",
-    "shortcut": "I"
+    "shortcut": "P",
+    "display_name":"Tỉnh-Thành phố"
   },
-  "town": {
+  "district": {
     "color": "#F6FA67",
-    "shortcut": "H"
+    "shortcut": "Q",
+    "display_name":"Quận-huyện"
   },
   "name_place": {
     "color": "#a6b1a1",
-    "shortcut": "R"
+    "shortcut": "D",
+    "display_name":"Địa điểm"
   },
-  "building": {
-    "color": "#f973c5",
-    "shortcut": "U"
-  },
-  "room": {
+  "street": {
     "color": "#e97b27",
-    "shortcut": "P"
+    "shortcut": "S",
+    "display_name":"Đường"
   },
-  "DRL": {
+  "reward": {
     "color": "#6e2241",
-    "shortcut": "D"
+    "shortcut": "L",
+    "display_name":"Lợi ích"
   },
-  "CTXH": {
-    "color": "#5ae2f7",
-    "shortcut": "C"
-  },
-  "holder_name": {
+  "contact": {
     "color": "#5c78eb",
-    "shortcut": "E"
+    "shortcut": "H",
+    "display_name":"Tên người liên hệ"
+
   },
-  "phone": {
+  "register": {
     "color": "#45a0ac",
-    "shortcut": "S"
-  },
-  "email": {
-    "color": "#F00705",
-    "shortcut": "M"
-  },
-  "assign": {
-    "color": "#e37163",
-    "shortcut": "K"
+    "shortcut": "K",
+    "display_name":"Đăng ký"
   },
   "works": {
-    "color": "#2a920b",
-    "shortcut": "V"
+    "color": "#F00705",
+    "shortcut": "V",
+    "display_name":"Công việc"
   },
   "joiner": {
-    "color": "#C3E991",
-    "shortcut": "J"
+    "color": "#e37163",
+    "shortcut": "J",
+    "display_name":"Đối tượng"
   }
 }
