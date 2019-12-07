@@ -187,7 +187,7 @@ export default class TextArea extends Component {
       <div className="text-area row">
         <div className="col-xs-12 col-sm-12 col-md-12 col-lg-12">
           {Object.keys(this.props.categories).map(this.createButton)}
-          <button
+          {/* <button
             type="button"
             className="btn btn-default"
             key="Reset-btn"
@@ -204,7 +204,7 @@ export default class TextArea extends Component {
             }}
           >
             Reset
-          </button>
+          </button> */}
         </div>
         <div
           key="text-container"
