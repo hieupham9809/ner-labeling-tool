@@ -283,11 +283,12 @@ class App extends Component {
       newLocal.setState({ runs });
     };
   }
-  saveAll = () => {
+  saveAll = ()  => {
     var resultJsonString=''
     const { data, runs, name } = this.state;
-    
+    // console.log(data)
     const list = data.map((x, i) => ({ ...data[i], tags: runs[i] }));
+    // console.log(list)
     list.forEach(corpus=>{
         if (corpus.tags){
         let label=''
@@ -333,6 +334,7 @@ class App extends Component {
                 contentList=contentList.concat(list_splited)
             }
             });
+        
         label=label.substring(0,label.length-1)
         console.log('-------------------------------message length')
         console.log(corpus.message.split(' ').length)
@@ -341,14 +343,19 @@ class App extends Component {
         corpus['label']=label.split(' ')
         corpus['token']=contentList
         console.log(contentList)
-    
-        resultJsonString+=JSON.stringify(corpus)+','
+        console.log(corpus)
+        
         }
+        resultJsonString+=JSON.stringify(corpus)+','
+        console.log(resultJsonString)
+
     })
+    // console.log(resultJsonString)
+
     resultJsonString='['+resultJsonString.substring(0,resultJsonString.length-1)+']'
     
     console.log('This is after the read call');
-  
+    console.log(resultJsonString)
   
     download(resultJsonString, name, 'application/json');
   };
