@@ -5,7 +5,7 @@
     "display_name":"Tên hoạt động"
   },
   "type_activity": {
-    "color": "#d5daac",
+    "color": "#DB2192",
     "shortcut": "L",
     "display_name":"Loại hoạt động"
   },
@@ -31,6 +31,11 @@
     "shortcut": "Q",
     "display_name":"Quận-huyện"
   },
+  "ward": {
+    "color": "#1CBCBC",
+    "shortcut": "X",
+    "display_name":"Ấp-Phường-Xã"
+  },
   "name_place": {
     "color": "#a6b1a1",
     "shortcut": "D",
@@ -43,7 +48,7 @@
   },
   "reward": {
     "color": "#6e2241",
-    "shortcut": "L",
+    "shortcut": "I",
     "display_name":"Lợi ích"
   },
   "contact": {
