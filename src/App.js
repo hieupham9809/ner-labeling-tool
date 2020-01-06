@@ -134,6 +134,7 @@ class App extends Component {
                 tags[prev.toString()]['end']=corpusPointer+1
 
 
+
                 console.log(`begin_pointer ${corpusPointer+1} of label ${listLabel[index+1].slice(2,listLabel[index+1].length)}`)
                 console.log(`previous_pointer ${prev} of label ${listLabel[index+1].slice(2,listLabel[index+1].length)}`)
                 tags[(corpusPointer+1).toString()]={}
@@ -176,17 +177,19 @@ class App extends Component {
   }
   
   predict = () => {
+    console.log("abc")
     const {
       idx, data, runs,
     } = this.state;
     const newLocal = this;
 
-    //LOAD AND CHANGE 
+    // //LOAD AND CHANGE 
     // var corpusesConvert=require('/home/lap11305/LVTN/ner-labeling-tool/src/test_predicted_convert.json')
     // var resultJsonStringConvert=''
-    // let listLabel;
-    // let listToken;
-    // let newTags;
+    let listLabel;
+    let listToken;
+    let newTags;
+    let contentAfter;
     // for (let index=0;index<corpusesConvert.length;index++)
     // {
       
@@ -204,17 +207,27 @@ class App extends Component {
 
 
 
+    contentAfter = this.replaceAll(data[idx].message,"\n", " \n ")
+    listToken = this.removeA(contentAfter.split(' '),'')
+    let newMessage=listToken.join(' ')
+    axios.post(PREDICT_API,{
+      items:[{content:newMessage,
+      id:"1"}]
+    }).then((res) => {
+      console.log(res)
+      listLabel=res.data.results[0].tags
+      // contentAfter = this.replaceAll(data[idx].message,"\n", " \n ")
+      // listToken = this.removeA(contentAfter.split(' '),'')
+      // listToken=data[idx].message.split(" ")
+      newTags=this.parseTags(listToken,listLabel)
+      // console.log(data[idx].content)
+      data[idx].message = newMessage
+      runs[idx] = newTags
+      newLocal.setState({ data, runs });
 
-
-    // axios.post(PREDICT_API, [data[idx].message]).then((res) => {
-    //   const newData = this.combineChunk(res.data[0][0]);
-    //   // console.log(data[idx].content)
-    //   data[idx].message = newData.content;
-    //   runs[idx] = newData.runs;
-    //   newLocal.setState({ data, runs });
-    //   // console.log(data[idx].content);
-    //   // console.log(runs[idx]);
-    // });
+      // console.log(data[idx].content);
+      // console.log(runs[idx]);
+    });
 
 
       
