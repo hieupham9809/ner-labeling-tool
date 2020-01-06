@@ -316,18 +316,28 @@ class App extends Component {
     
                 let label_length=list_splited.length            
                     // let index=0;
+                    var isBegin = true;
                     for (let index=0;index<label_length;index++)
                     {
                         if (label_type!='normal' && list_splited[index]!='\n'){
                             if (index==0){
-                                label+='B-'+label_type+' '
+                                label+='B-'+label_type+' ';
+                                isBegin = false;
                             }
                             else{
-                                label+='I-'+label_type+' '
+                                if (isBegin){
+                                  label+='B-'+label_type+' ';
+                                  isBegin = false;
+
+                                } else {
+                                  label+='I-'+label_type+' ';
+
+                                }
                             }
                         }
                         else{
-                            label+='O '
+                            label+='O ';
+                            isBegin = true;
                         }
                     }
     

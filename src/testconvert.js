@@ -28,6 +28,7 @@ for (var key in tags){
     var begin = key;
     var end = tag.end;
     var type = tag.type;
+    var isBegin = true;
     // console.log(begin + " " + end);
     labels = replaceAll(content.substring(begin, end),"\n", " \n ");
     if (labels != ' '){
@@ -43,6 +44,7 @@ for (var key in tags){
 
             } else {
                 labelList.push('B-'+type);
+                isBegin = false;
                 console.log(labels[0] + " " + 'B-'+type);
             }
             contentList.push(labels[0]);
@@ -51,10 +53,16 @@ for (var key in tags){
         for (var i = 1; i < labels.length; i++){
             if (labels[i] == "\n" || type == "normal"){
                 labelList.push('O');
+                isBegin = true;
                 console.log(labels[i] + " " + 'O');    
             } else {
-                labelList.push('I-'+type);
-                console.log(labels[i] + " " + 'I-'+type);
+                if (isBegin){
+                    labelList.push('B-'+type);
+                    isBegin = false;
+                } else {
+                    labelList.push('I-'+type);
+                    console.log(labels[i] + " " + 'I-'+type);
+                }
             }
             contentList.push(labels[i]);
         }
