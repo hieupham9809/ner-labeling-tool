@@ -17,6 +17,8 @@ class App extends Component {
     };
     this.state = {
       idx: -1,
+      
+      predictState:[]
     };
     // var data = require('./test.json');
     // this.state = {
@@ -34,12 +36,22 @@ class App extends Component {
     const newLocal = this;
     reader.onload = (ev) => {
       const data = JSON.parse(ev.target.result);
+      var predict = [];
+      for (var i = 0; i < data.length; i++){
+        predict.push({
+          isPredicting : false,
+          isFail : false
+        });
+      };
+
+
       newLocal.setState({
         data,
         name: file.name,
         idx: 0,
         runs: data.map(x => x.tags),
         recheck:false,
+        predictState : predict
       });
     };
     if (file) {
@@ -64,8 +76,8 @@ class App extends Component {
       {
         if (list[index]!=value && list[index]!="️️️")
         {
-          console.log("------------------------length special")
-          console.log("️️️".length)
+          // console.log("------------------------length special")
+          // console.log("️️️".length)
           result.push(list[index])
         }
       }
@@ -78,8 +90,8 @@ class App extends Component {
     let tags={}
     if (listLabel[0]!='O')
         {
-            console.log(`begin_pointer ${corpusPointer} of label ${listLabel[0].slice(2,listLabel[0].length)}`)
-            console.log(`previous pointer ${prev} of label ${listLabel[0].slice(2,listLabel[0].length)}`)
+            // console.log(`begin_pointer ${corpusPointer} of label ${listLabel[0].slice(2,listLabel[0].length)}`)
+            // console.log(`previous pointer ${prev} of label ${listLabel[0].slice(2,listLabel[0].length)}`)
             tags[corpusPointer.toString()]={}
             tags[corpusPointer.toString()]['prev']=prev
             tags[corpusPointer.toString()]['type']=listLabel[0].slice(2,listLabel[0].length)
@@ -87,8 +99,8 @@ class App extends Component {
         }
     else
         {
-            console.log(`begin_pointer ${corpusPointer} of label normal`)
-            console.log(`previous pointer ${prev} of label normal`)
+            // console.log(`begin_pointer ${corpusPointer} of label normal`)
+            // console.log(`previous pointer ${prev} of label normal`)
             tags[corpusPointer.toString()]={}
             tags[corpusPointer.toString()]['prev']=prev
             tags[corpusPointer.toString()]['type']='normal'
@@ -106,13 +118,13 @@ class App extends Component {
         if (listLabel[index].includes('B') && listLabel[index+1].includes('B')&&listLabel[index]!=listLabel[index+1]||listLabel[index].includes('I') && listLabel[index+1].includes('B'))
             {
                 
-                console.log(`end_pointer ${corpusPointer} of label ${listLabel[index].slice(2,listLabel[index].length)}`)
+                // console.log(`end_pointer ${corpusPointer} of label ${listLabel[index].slice(2,listLabel[index].length)}`)
                 tags[prev.toString()]['end']=corpusPointer
                 tags[prev.toString()]['type']=listLabel[index].slice(2,listLabel[index].length)
 
-                console.log(`begin_pointer ${corpusPointer} of label normal`)
-                console.log(`end_pointer ${corpusPointer+1} of label normal`)
-                console.log(`previous_pointer ${prev} of label normal`)
+                // console.log(`begin_pointer ${corpusPointer} of label normal`)
+                // console.log(`end_pointer ${corpusPointer+1} of label normal`)
+                // console.log(`previous_pointer ${prev} of label normal`)
                 tags[corpusPointer.toString()]={}
                 tags[corpusPointer.toString()]['end']=corpusPointer+1
                 tags[corpusPointer.toString()]['type']='normal'
@@ -120,8 +132,8 @@ class App extends Component {
                 tags[corpusPointer.toString()]['prev']=prev
 
 
-                console.log(`begin_pointer ${corpusPointer+1} of label ${listLabel[index+1].slice(2,listLabel[index+1].length)}`)
-                console.log(`previous_pointer ${corpusPointer} of label ${listLabel[index+1].slice(2,listLabel[index+1].length)}`)
+                // console.log(`begin_pointer ${corpusPointer+1} of label ${listLabel[index+1].slice(2,listLabel[index+1].length)}`)
+                // console.log(`previous_pointer ${corpusPointer} of label ${listLabel[index+1].slice(2,listLabel[index+1].length)}`)
                 tags[(corpusPointer+1).toString()]={}
                 tags[(corpusPointer+1).toString()]['type']=listLabel[index+1].slice(2,listLabel[index+1].length)
                 tags[(corpusPointer+1).toString()]['prev']=corpusPointer
@@ -130,13 +142,13 @@ class App extends Component {
             }
         if (listLabel[index].includes('O') && listLabel[index+1].includes('B'))
             {
-                console.log(`end_pointer ${corpusPointer+1} of label normal`)
+                // console.log(`end_pointer ${corpusPointer+1} of label normal`)
                 tags[prev.toString()]['end']=corpusPointer+1
 
 
 
-                console.log(`begin_pointer ${corpusPointer+1} of label ${listLabel[index+1].slice(2,listLabel[index+1].length)}`)
-                console.log(`previous_pointer ${prev} of label ${listLabel[index+1].slice(2,listLabel[index+1].length)}`)
+                // console.log(`begin_pointer ${corpusPointer+1} of label ${listLabel[index+1].slice(2,listLabel[index+1].length)}`)
+                // console.log(`previous_pointer ${prev} of label ${listLabel[index+1].slice(2,listLabel[index+1].length)}`)
                 tags[(corpusPointer+1).toString()]={}
                 tags[(corpusPointer+1).toString()]['type']=listLabel[index+1].slice(2,listLabel[index+1].length)
                 tags[(corpusPointer+1).toString()]['prev']=prev
@@ -144,13 +156,13 @@ class App extends Component {
             }
         if (listLabel[index].includes('I') && listLabel[index+1].includes('O')||listLabel[index].includes('B') && listLabel[index+1].includes('O'))
             {
-                console.log(`end_pointer ${corpusPointer} of label ${listLabel[index].slice(2,listLabel[index].length)}`) 
+                // console.log(`end_pointer ${corpusPointer} of label ${listLabel[index].slice(2,listLabel[index].length)}`) 
                 tags[prev.toString()]['end']=corpusPointer
                 tags[prev.toString()]['type']=listLabel[index].slice(2,listLabel[index].length)
 
 
-                console.log(`begin_pointer ${corpusPointer} of label normal`)
-                console.log(`previous_pointer ${prev} of label normal`)
+                // console.log(`begin_pointer ${corpusPointer} of label normal`)
+                // console.log(`previous_pointer ${prev} of label normal`)
                 tags[corpusPointer.toString()]={}
                 tags[corpusPointer.toString()]['prev']=prev
                 tags[corpusPointer.toString()]['type']='normal'
@@ -177,7 +189,7 @@ class App extends Component {
   }
   
   predict = () => {
-    console.log("abc")
+    // console.log("abc")
     const {
       idx, data, runs,
     } = this.state;
@@ -210,11 +222,22 @@ class App extends Component {
     contentAfter = this.replaceAll(data[idx].message,"\n", " \n ")
     listToken = this.removeA(contentAfter.split(' '),'')
     let newMessage=listToken.join(' ')
-    axios.post(PREDICT_API,{
+    var predictStateList = newLocal.state['predictState'];
+    
+    predictStateList[idx].isPredicting = true;
+    predictStateList[idx].isFail = false;
+
+    newLocal.setState({
+      predictState: predictStateList
+      
+    });
+
+    
+    axios.post(PREDICT_API[[Math.floor(Math.random() * PREDICT_API.length)]],{
       items:[{content:newMessage,
       id:"1"}]
     }).then((res) => {
-      console.log(res)
+      // console.log(res)
       listLabel=res.data.results[0].tags
       // contentAfter = this.replaceAll(data[idx].message,"\n", " \n ")
       // listToken = this.removeA(contentAfter.split(' '),'')
@@ -224,9 +247,25 @@ class App extends Component {
       data[idx].message = newMessage
       runs[idx] = newTags
       newLocal.setState({ data, runs });
+      predictStateList[idx].isPredicting = false;
+      predictStateList[idx].isFail = false;
 
+      newLocal.setState({
+        predictState: predictStateList
+        
+      });
+      
       // console.log(data[idx].content);
       // console.log(runs[idx]);
+    }, (error)=> {
+      predictStateList[idx].isPredicting = false;
+      predictStateList[idx].isFail = true;
+
+      newLocal.setState({
+        predictState: predictStateList
+        
+      });
+      
     });
 
 
@@ -359,26 +398,26 @@ class App extends Component {
             });
         
         label=label.substring(0,label.length-1)
-        console.log('-------------------------------message length')
-        console.log(corpus.message.split(' ').length)
-        console.log('-------------------------------label length')
-        console.log(label.split(' ').length)
+        // console.log('-------------------------------message length')
+        // console.log(corpus.message.split(' ').length)
+        // console.log('-------------------------------label length')
+        // console.log(label.split(' ').length)
         corpus['label']=label.split(' ')
         corpus['token']=contentList
-        console.log(contentList)
-        console.log(corpus)
+        // console.log(contentList)
+        // console.log(corpus)
         
         }
         resultJsonString+=JSON.stringify(corpus)+','
-        console.log(resultJsonString)
+        // console.log(resultJsonString)
 
     })
     // console.log(resultJsonString)
 
     resultJsonString='['+resultJsonString.substring(0,resultJsonString.length-1)+']'
     
-    console.log('This is after the read call');
-    console.log(resultJsonString)
+    // console.log('This is after the read call');
+    // console.log(resultJsonString)
   
     download(resultJsonString, name, 'application/json');
   };
@@ -413,18 +452,7 @@ class App extends Component {
     const {
       idx, data, runs, name,recheck,
     } = this.state;
-    const headings = [
-      'Product name',
-      'SKU',
-      'Stock quantity',
-      'Wholesale cost',
-      'Sale price',
-      'Quantity sold',
-      'Gross sales',
-      'Net sales',
-      'Notes',
-      'More'
-    ];
+    var predictStateList = this.state['predictState'];
 
     const rows =
       [
@@ -489,11 +517,20 @@ class App extends Component {
             type="button"
             className="btn btn-default"
             key="predict"
+            disabled={predictStateList[idx].isPredicting}
             onClick={this.predict}
           >
             Predict
           </button>,
+          
         ]}
+        {predictStateList != undefined && predictStateList.length > 0 
+        && predictStateList[idx].isFail && 
+        <span
+            >
+              Request Timeout, please try again!
+            </span>
+        }
         {idx >= 0 && data && data[idx] ? (
           <TextArea
             key="text-area"
