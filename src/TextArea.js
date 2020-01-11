@@ -100,6 +100,7 @@ export default class TextArea extends Component {
     </button>
   );
   handleTextSelected = (name) => {
+    // console.log("--------------------------------------HANDLE TEXTTTTTTTTTTTT")
     // console.log(this.container.contains)
     const range = getSelectionText();
     if (!range) return;
@@ -121,6 +122,10 @@ export default class TextArea extends Component {
     // console.log(startIdx, endIdx)
     if (!startIdx && !endIdx) return;
     const { runs } = this.state;
+    const old_runs = JSON.parse(JSON.stringify(runs));
+    // console.log("--------------------------------old runs OUT IF ")
+    // console.log(old_runs)
+    // const old_runs=runs
     const startRun = runs[startRunIdx];
     // console.log('Start Run', startRunIdx)
     const endRun = runs[endRunIdx];
@@ -176,10 +181,28 @@ export default class TextArea extends Component {
         break;
       }
     }
-    this.setState({ runs });
-    this.props.onSaved(runs);
+    // console.log("-----------------------------------LIST KEY runs")
+    // // console.log(runs)
+    // console.log(Object.keys(runs))
+    if (!(Object.keys(runs).includes("NaN"))){
+      
+      this.setState({ runs });
+      this.props.onSaved(runs);
+    }
+    else{
+      // console.log("------------------------runs in IF ")
+      // console.log(old_runs)
+      // console.log("<3 in if")
+      this.setState({ runs: old_runs });
+      this.props.onSaved(old_runs);
+      console.log(this.state.runs)
+    }
+    
+
   };
   render() {
+    // console.log("-------------------------------------RENDERRRRRRRRRRR")
+    // console.log(this.state.runs)
     const { text, runs } = this.state;
     const newLocal = this;
     let currentRuns = 0;
@@ -215,7 +238,14 @@ export default class TextArea extends Component {
           className="text-container col-xs-12 col-sm-12 col-md-12 col-lg-12"
         >
           {Object.keys(runs).map((start) => {
+            // console.log("--------------------------------runs")
+            // console.log(runs)
+            // console.log("---------------------------------start")
+            // console.log(start)
             const { end, type } = runs[start];
+            // console.log("-----------------------------run")
+            // console.log(this.state.runs)
+            // console.log(this.props)
             const { color } = this.props.categories[type];
             let len = 0;
             const temp = currentRuns;
