@@ -17,7 +17,7 @@ class App extends Component {
     };
     this.state = {
       idx: -1,
-      
+      jumpValue:-1,
       predictState:[]
     };
     // var data = require('./test.json');
@@ -29,6 +29,15 @@ class App extends Component {
     //   runs: data.map(x => x.tags),
     // };
   }
+
+  onChangeJumpValue(event) {
+    console.log("----------------------------------jump value")
+    console.log(typeof event.target.value)
+    this.setState({
+        jumpValue:parseInt(event.target.value)-1
+    });
+
+}
 
   handleFileSelect = (e) => {
     const file = e.target.files[0];
@@ -505,6 +514,15 @@ class App extends Component {
           >
             Next
           </button>,
+          <button
+            type="button"
+            className="btn btn-default"
+            key="jump"
+            onClick={() => this.setState({ idx: this.state.jumpValue })}
+          >
+            Jump
+          </button>,
+          <input type="text" name="jumpindex" onChange={this.onChangeJumpValue.bind(this)}/>,
           <button
             type="button"
             className="btn btn-default"
