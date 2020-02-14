@@ -248,10 +248,51 @@ class App extends Component {
     }).then((res) => {
       // console.log(res)
       listLabel=res.data.results[0].tags
+      console.log("---------------------------------Before fix label")
+      // console.log(listLabel)
+      for (let i=0;i<listLabel.length;i++)
+      {
+        console.log(`Token: ${listToken[i]} Label: ${listLabel[i]}`)
+      }
+      for (let i=0;i<listLabel.length-1;i++)
+      {
+        if (i==0&&listLabel[i].includes('I'))
+        {
+          listLabel[i]='B-'.concat(listLabel[i].slice(2,listLabel[i].length))
+        }
+
+        if (listLabel[i].includes('I') && listLabel[i+1].includes('I')&&listLabel[i].slice(2,listLabel[i].length)!=listLabel[i+1].slice(2,listLabel[i+1].length))
+        {
+          listLabel[i+1]='B-'.concat(listLabel[i+1].slice(2,listLabel[i+1].length))
+        }
+
+        if (listLabel[i].includes("O") && listLabel[i+1].includes("I"))
+        {
+          listLabel[i+1]='B-'.concat(listLabel[i+1].slice(2,listLabel[i+1].length))
+
+        }
+
+        if (listLabel[i].includes("B") && listLabel[i+1].includes("I")&&listLabel[i].slice(2,listLabel[i].length)!=listLabel[i+1].slice(2,listLabel[i+1].length))
+        {
+          listLabel[i+1]='B-'.concat(listLabel[i+1].slice(2,listLabel[i+1].length))
+
+        }
+
+      }
+      console.log("------------------------after fix label")
+      for (let i=0;i<listLabel.length;i++)
+      {
+        console.log(`Token: ${listToken[i]} Label: ${listLabel[i]}`)
+      }
+      // console.log("-----------------------------list label after")
+      // console.log(listLabel)
       // contentAfter = this.replaceAll(data[idx].message,"\n", " \n ")
       // listToken = this.removeA(contentAfter.split(' '),'')
       // listToken=data[idx].message.split(" ")
+      // console.log("--------------------------------list token")
+      // console.log(listToken)
       newTags=this.parseTags(listToken,listLabel)
+      console.log(newTags)
       // console.log(data[idx].content)
       data[idx].message = newMessage
       runs[idx] = newTags
@@ -362,11 +403,11 @@ class App extends Component {
             {
                 let label_type=corpus.tags[key].type
                 let list_splited_1 = this.replaceAll(corpus.message.substring(parseInt(key),corpus.tags[key].end),"\n", " \n ")
-                console.log("---------------------------before")
-                console.log(list_splited_1.split(' '))
+                // console.log("---------------------------before")
+                // console.log(list_splited_1.split(' '))
                 let list_splited = this.removeA(list_splited_1.split(' '),'')
-                console.log("---------------------------after")
-                console.log(list_splited)
+                // console.log("---------------------------after")
+                // console.log(list_splited)
                 // let list_splited=corpus.message.substring(parseInt(key),corpus.tags[key].end).split(' ')
                 // for( let i = 0; i < list_splited.length; i++){ 
                 //     if ( list_splited[i] === '') {
