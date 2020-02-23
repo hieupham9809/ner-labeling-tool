@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import './App.css';
 import TextArea from './TextArea';
+import TextAreaCustom from './TextAreaCustom';
 import { download } from './utils';
 import categories from './categories.json';
 import { PREDICT_API } from './constants';
@@ -503,7 +504,8 @@ class App extends Component {
       idx, data, runs, name,recheck,
     } = this.state;
     var predictStateList = this.state['predictState'];
-
+    console.log("----------------------------render app")
+    console.log(idx)
     const rows =
       [
         'Red and black plaid scarf with thin red stripes and thick black stripes',
@@ -583,6 +585,9 @@ class App extends Component {
           </button>,
           
         ]}
+
+
+
         {predictStateList != undefined && predictStateList.length > 0 
         && predictStateList[idx].isFail && 
         <span
@@ -590,7 +595,10 @@ class App extends Component {
               Request Timeout, please try again!
             </span>
         }
-        {idx >= 0 && data && data[idx] ? (
+
+        {
+          idx >= 0 && data && data[idx] ? (
+          
           <TextArea
             key="text-area"
             id={`article-${idx}`}
@@ -629,6 +637,34 @@ class App extends Component {
         )} */}
         {recheck && [this.loadTable(10,data[idx].token, data[idx].label)]}
         {/* <LabelMap headings={headings} rows={rows} */}
+
+         {//idx >= 0 && data && data[idx] ? (
+        //   <TextAreaCustom
+        //     key="text-area"
+        //     id={`article-${idx}`}
+        //     text=''
+        //     categories={categories}
+        //     runs={null}
+        //     // onSaved={this.saveRuns(idx)}
+        //   />
+        // ) : null
+      }
+        {
+          !(idx >= 0 && data && data[idx]) ? (
+          
+            <TextAreaCustom
+            key="text-area"
+            id="custom-input"
+            text=''
+            categories={categories}
+            
+            runs={null}
+            // onSaved={this.saveRuns(idx)}
+          />
+          ) : null
+          
+        }
+
       </div>
     );
   }
